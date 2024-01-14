@@ -5,6 +5,7 @@ from hstest.test_case import SimpleTestCase
 
 class RegexTest(StageTest):
     m_cases = [
+        # stage 1
         ("a", "a", "true", "Two identical patterns should return True!"),
         ("a", "b", "false", "Two different patterns should not return True!"),
         ("7", "7", "true", "Two identical patterns should return True!"),
@@ -13,7 +14,15 @@ class RegexTest(StageTest):
         ("a", ".", "false", "A period in the input string is still a literal!"),
         ("", "a", "true", "An empty regex always returns True!"),
         ("", "", "true", "An empty regex always returns True!"),
-        ("a", "", "false", "A non-empty regex and an empty input string always returns False!")
+        ("a", "", "false", "A non-empty regex and an empty input string always returns False!"),
+        # stage 2
+        ("apple", "apple", "true", "Two identical equal-length patterns should return True!"),
+        (".pple", "apple", "true", "The wild-card '.' should match any single character in a string."),
+        ("appl.", "apple", "true", "The wild-card '.' should match any single character in a string."),
+        (".....", "apple", "true", "The wild-card '.' should match any single character in a string."),
+        ("", "apple", "true", "An empty regex always returns True!"),
+        ("apple", "", "false", "A non-empty regex and an empty input string always returns False!"),
+        ("apple", "peach", "false", "Two different patterns should not return True!")
     ]
 
     def generate(self):

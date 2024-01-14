@@ -9,16 +9,23 @@ import (
 
 func main() {
 	regex, input := parseInput()
+	fmt.Println(regexMatch(regex, input))
 
-	if regex == input {
-		fmt.Println("true")
-	} else if regex == "." {
-		fmt.Println("true")
-	} else if regex == "" {
-		fmt.Println("true")
-	} else {
-		fmt.Println("false")
+	return
+}
+
+func regexMatch(regex, input string) bool {
+	if regex == "" {
+		return true
 	}
+	if input == "" {
+		return false
+	}
+	if (string(regex[0]) == ".") || (regex[0] == input[0]) {
+		return regexMatch(regex[1:], input[1:])
+	}
+
+	return false
 }
 
 func parseInput() (regex, input string) {
