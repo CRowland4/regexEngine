@@ -21,11 +21,15 @@ func regexMatch(regex, input string) bool {
 	if input == "" {
 		return false
 	}
-	if (string(regex[0]) == ".") || (regex[0] == input[0]) {
+	if doesFirstCharacterMatch(regex, input) {
 		return regexMatch(regex[1:], input[1:])
 	}
 
-	return false
+	return regexMatch(regex, input[1:])
+}
+
+func doesFirstCharacterMatch(regex, input string) (isMatch bool) {
+	return (string(regex[0]) == ".") || (regex[0] == input[0])
 }
 
 func parseInput() (regex, input string) {
