@@ -1,35 +1,35 @@
 # coding: utf-8
 from hstest.stage_test import StageTest
-from hstest.test_case import TestCase, SimpleTestCase
+from hstest.test_case import SimpleTestCase
 
 
 class RegexTest(StageTest):
     m_cases = [
         # stage 1
-        ("a", "a", "true", "Two identical patterns should return true!"),
-        ("a", "b", "false", "Two different patterns should not return true!"),
-        ("7", "7", "true", "Two identical patterns should return true!"),
-        ("6", "7", "false", "Two different patterns should not return true!"),
+        ("a", "a", "true", "Two identical patterns should return True!"),
+        ("a", "b", "false", "Two different patterns should not return True!"),
+        ("7", "7", "true", "Two identical patterns should return True!"),
+        ("6", "7", "false", "Two different patterns should not return True!"),
         (".", "a", "true", "Don't forget that '.' is a wild-card that matches any single character."),
         ("a", ".", "false", "A period in the input string is still a literal!"),
-        ("", "a", "true", "An empty regex always returns true!"),
-        ("", "", "true", "An empty regex always returns true!"),
-        ("a", "", "false", "A non-empty regex and an empty input string always returns false!"),
+        ("", "a", "true", "An empty regex always returns True!"),
+        ("", "", "true", "An empty regex always returns True!"),
+        ("a", "", "false", "A non-empty regex and an empty input string always returns False!"),
         # stage 2
-        ("apple", "apple", "true", "Two identical equal-length patterns should return true!"),
+        ("apple", "apple", "true", "Two identical equal-length patterns should return True!"),
         (".pple", "apple", "true", "The wild-card '.' should match any single character in a string."),
         ("appl.", "apple", "true", "The wild-card '.' should match any single character in a string."),
         (".....", "apple", "true", "The wild-card '.' should match any single character in a string."),
-        ("", "apple", "true", "An empty regex always returns true!"),
-        ("apple", "", "false", "A non-empty regex and an empty input string always returns false!"),
-        ("apple", "peach", "false", "Two different patterns should not return true!"),
+        ("", "apple", "true", "An empty regex always returns True!"),
+        ("apple", "", "false", "A non-empty regex and an empty input string always returns False!"),
+        ("apple", "peach", "false", "Two different patterns should not return True!"),
         # stage 3
-        ("le", "apple", "true", "If the input string contains the regex, it should return true!"),
-        ("app", "apple", "true", "If the input string contains the regex, it should return true!"),
-        ("a", "apple", "true", "If the input string contains the regex, it should return true!"),
+        ("le", "apple", "true", "If the input string contains the regex, it should return True!"),
+        ("app", "apple", "true", "If the input string contains the regex, it should return True!"),
+        ("a", "apple", "true", "If the input string contains the regex, it should return True!"),
         (".", "apple", "true", "Even a single wild-card character '.' can produce a match!"),
-        ("apwle", "apple", "false", "Two different patterns should not return true!"),
-        ("peach", "apple", "false", "Two different patterns should not return true!"),
+        ("apwle", "apple", "false", "Two different patterns should not return True!"),
+        ("peach", "apple", "false", "Two different patterns should not return True!"),
         # stage 4
         ('^app', 'apple', "true",
          "A regex starting with '^' should match the following pattern only at the beginning of the input string!"),
@@ -87,7 +87,20 @@ class RegexTest(StageTest):
         ("^n.+p$", "noooooooope", "false",
          "The repetition operators can be combined with other metacharacters, like '.', '^' and '$'."),
         ('^.*c$', 'abcabc', "true",
-         "The repetition operators can be combined with other metacharacters, like '.', '^' and '$'.")
+         "The repetition operators can be combined with other metacharacters, like '.', '^' and '$'."),
+        # stage 6
+        ("\\.$", "end.", "true",
+         "Don't forget that '\\' is an escape symbol in Python itself, so it has to be duplicated!"),
+        ("3\\+3", "3+3=6", "true",
+         "Don't forget that '\\' is an escape symbol in Python itself, so it has to be duplicated!"),
+        ("\\?", "Is this working?", "true",
+         "Don't forget that '\\' is an escape symbol in Python itself, so it has to be duplicated!"),
+        ("\\\\", "\\", "true",
+         "Don't forget that '\\' is an escape symbol in Python itself, so it has to be duplicated!"),
+        ("colou\\?r", "color", "false",
+         "Don't forget that '\\' is an escape symbol in Python itself, so it has to be duplicated!"),
+        ("colou\\?r", "colour", "false",
+         "Don't forget that '\\' is an escape symbol in Python itself, so it has to be duplicated!")
     ]
 
     def generate(self):
