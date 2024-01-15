@@ -62,7 +62,7 @@ func handlePlus(regex, input string, plusFlag bool) (isMatch bool) {
 	}
 
 	newRegex := strings.Replace(regex, regex[0:2], "", 1)
-	if plusFlag && strings.HasSuffix(regex, "$") && isEqualLengthRegexMatch(newRegex, input) {
+	if plusFlag && isEqualLengthRegexMatch(newRegex, input) {
 		return true
 	}
 
@@ -83,7 +83,7 @@ func handleAsterisk(regex, input string) (isMatch bool) {
 	}
 
 	newRegex := strings.Replace(regex, regex[0:2], "", 1)
-	if strings.HasSuffix(regex, "$") && isEqualLengthRegexMatch(newRegex, input) {
+	if isEqualLengthRegexMatch(newRegex, input) {
 		return true
 	}
 
@@ -104,12 +104,12 @@ func handleQuestionMark(regex, input string) (isMatch bool) {
 }
 
 func isBaseCase(regex, input string) (isMet bool, result string) {
-	if (regex == ".*") && (input == "") {
-		return true, "true"
-	}
-	if (regex == ".+") && (input == "") {
-		return true, "true"
-	}
+	//if (regex == ".*") && (input == "") {
+	//	return true, "true"
+	//}
+	//if (regex == ".+") && (input == "") {
+	//	return true, "true"
+	//}
 	if regex == "" {
 		return true, "true"
 	}
