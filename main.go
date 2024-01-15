@@ -34,19 +34,9 @@ func isEqualLengthRegexMatch(regex, input string) (isMatch bool) {
 		return result == "true"
 	}
 
-	// TODO put in a handleRepetitionOperators function
-	if strings.Index(regex, "?") == 1 {
-		return handleQuestionMark(regex, input)
+	if strings.IndexAny(regex, "?*+") == 1 {
+		return handleRepetitionOperators(regex, input)
 	}
-
-	if strings.Index(regex, "*") == 1 {
-		return handleAsterisk(regex, input)
-	}
-
-	if strings.Index(regex, "+") == 1 {
-		return handlePlus(regex, input, false)
-	}
-	/////////////////////////////////////////////////
 
 	if !isCharacterMatch(regex[0], input[0]) {
 		return false
@@ -55,13 +45,24 @@ func isEqualLengthRegexMatch(regex, input string) (isMatch bool) {
 	return isEqualLengthRegexMatch(regex[1:], input[1:])
 }
 
+func handleRepetitionOperators(regex, input string) (isMatch bool) {
+	if strings.Index(regex, "?") == 1 {
+		return handleQuestionMark(regex, input)
+	}
+	if strings.Index(regex, "*") == 1 {
+		return handleAsterisk(regex, input)
+	}
+
+	return handlePlus(regex, input, false)
+}
+
 func handlePlus(regex, input string, plusFlag bool) (isMatch bool) {
 	if isBaseCaseMet, result := isBaseCase(regex, input); isBaseCaseMet {
 		return result == "true"
 	}
 
-	modifiedRegex := strings.Replace(regex, regex[0:2], "", 1)
-	if plusFlag && strings.HasSuffix(regex, "$") && isEqualLengthRegexMatch(modifiedRegex, input) {
+	newRegex := strings.Replace(regex, regex[0:2], "", 1)
+	if plusFlag && strings.HasSuffix(regex, "$") && isEqualLengthRegexMatch(newRegex, input) {
 		return true
 	}
 
@@ -69,7 +70,7 @@ func handlePlus(regex, input string, plusFlag bool) (isMatch bool) {
 		return false
 	}
 	if !isCharacterMatch(regex[0], input[0]) && plusFlag {
-		return isEqualLengthRegexMatch(modifiedRegex, input)
+		return isEqualLengthRegexMatch(newRegex, input)
 	}
 
 	// Characters match
@@ -80,9 +81,14 @@ func handleAsterisk(regex, input string) (isMatch bool) {
 	if isBaseCaseMet, result := isBaseCase(regex, input); isBaseCaseMet {
 		return result == "true"
 	}
+
+	newRegex := strings.Replace(regex, regex[0:2], "", 1)
+	if strings.HasSuffix(regex, "$") && isEqualLengthRegexMatch(newRegex, input) {
+		return true
+	}
+
 	if !isCharacterMatch(regex[0], input[0]) {
-		regex = strings.Replace(regex, regex[0:2], "", 1)
-		return isEqualLengthRegexMatch(regex, input)
+		return isEqualLengthRegexMatch(newRegex, input)
 	}
 
 	return handleAsterisk(regex, input[1:])
