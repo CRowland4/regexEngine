@@ -18,16 +18,16 @@ func isRegexMatch(regex, input string) (isMatch bool) {
 	}
 
 	if strings.HasPrefix(regex, "^") {
-		return isEqualLengthRegexMatch(regex[1:], input)
+		return isEqualLengthMatch(regex[1:], input)
 	}
-	if isEqualLengthRegexMatch(regex, input) {
+	if isEqualLengthMatch(regex, input) {
 		return true
 	}
 
 	return isRegexMatch(regex, input[1:])
 }
 
-func isEqualLengthRegexMatch(regex, input string) (isMatch bool) {
+func isEqualLengthMatch(regex, input string) (isMatch bool) {
 	if isBaseCaseMet, result := isBaseCase(regex, input); isBaseCaseMet {
 		return result == "true"
 	}
@@ -44,16 +44,16 @@ func isEqualLengthRegexMatch(regex, input string) (isMatch bool) {
 		return false
 	}
 
-	return isEqualLengthRegexMatch(regex[1:], input[1:])
+	return isEqualLengthMatch(regex[1:], input[1:])
 }
 
 func handleEscapeCharacter(regex, input string) (isMatch bool) {
 	if !isRawCharacterMatch(regex[1], input[0]) {
-		return isEqualLengthRegexMatch(regex, input[1:])
+		return isEqualLengthMatch(regex, input[1:])
 	}
 
 	newRegex := strings.Replace(regex, regex[0:2], "", 1)
-	return isEqualLengthRegexMatch(newRegex, input[1:])
+	return isEqualLengthMatch(newRegex, input[1:])
 }
 
 func handleRepetitionOperators(regex, input string) (isMatch bool) {
@@ -73,7 +73,7 @@ func handlePlus(regex, input string, plusFlag bool) (isMatch bool) {
 	}
 
 	newRegex := strings.Replace(regex, regex[0:2], "", 1)
-	if plusFlag && isEqualLengthRegexMatch(newRegex, input) {
+	if plusFlag && isEqualLengthMatch(newRegex, input) {
 		return true
 	}
 
@@ -81,7 +81,7 @@ func handlePlus(regex, input string, plusFlag bool) (isMatch bool) {
 		return false
 	}
 	if !isCharacterMatch(regex[0], input[0]) && plusFlag {
-		return isEqualLengthRegexMatch(newRegex, input)
+		return isEqualLengthMatch(newRegex, input)
 	}
 
 	// Characters match
@@ -94,12 +94,12 @@ func handleAsterisk(regex, input string) (isMatch bool) {
 	}
 
 	newRegex := strings.Replace(regex, regex[0:2], "", 1)
-	if isEqualLengthRegexMatch(newRegex, input) {
+	if isEqualLengthMatch(newRegex, input) {
 		return true
 	}
 
 	if !isCharacterMatch(regex[0], input[0]) {
-		return isEqualLengthRegexMatch(newRegex, input)
+		return isEqualLengthMatch(newRegex, input)
 	}
 
 	return handleAsterisk(regex, input[1:])
@@ -111,7 +111,7 @@ func handleQuestionMark(regex, input string) (isMatch bool) {
 	}
 
 	newRegex := strings.Replace(regex, regex[0:2], "", 1)
-	return isEqualLengthRegexMatch(newRegex, input)
+	return isEqualLengthMatch(newRegex, input)
 }
 
 func isBaseCase(regex, input string) (isMet bool, result string) {
@@ -128,7 +128,6 @@ func isBaseCase(regex, input string) (isMet bool, result string) {
 	return false, "base case not met"
 }
 
-// Because of base cases being checked before this function is called, neither argument will ever be ""
 func isCharacterMatch(regexChar, inputChar byte) (isMatch bool) {
 	return (regexChar == inputChar) || (string(regexChar) == ".")
 }
