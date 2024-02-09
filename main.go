@@ -7,9 +7,24 @@ import (
 	"strings"
 )
 
+const (
+	Reset  = "\033[0m"
+	Red    = "\033[31m"
+	Green  = "\033[32m"
+	StartMessage = "\nWelcome to the Go regex engine! The engine supports the following chcaracters: [^, $, \\, ., ?, *, +]. Press CTRL+C to exit."
+)
+
 func main() {
-	regex, input := parseInput()
-	fmt.Println(isRegexMatch(regex, input))
+	fmt.Println(StartMessage)
+	fmt.Println(Red + "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n" + Reset)
+	for {
+		regex, input := parseInput()
+		if isRegexMatch(regex, input) {
+			fmt.Println(Green + "Match!\n" + Reset)
+		} else{
+			fmt.Println(Red + "Not a match.\n" + Reset)
+		}
+	}
 }
 
 func isRegexMatch(regex, input string) (isMatch bool) {
@@ -138,9 +153,18 @@ func isRawCharacterMatch(regexChar, inputChar byte) (isMatch bool) {
 
 func parseInput() (regex, input string) {
 	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
+	var fullInput string
+	for {
+		fmt.Print("Input a regex patter and string in the format '<regex patter>|<string>'\n> ")
+		scanner.Scan()
+		fullInput = scanner.Text()
 
-	fullInput := scanner.Text()
+		if strings.Count(fullInput, "|") != 1 {
+			fmt.Println(Red + "Incorrect input!\n" + Reset)
+		}else{ break }
+
+	}
+
 	splitInput := strings.Split(fullInput, "|")
 
 	return splitInput[0], splitInput[1]
